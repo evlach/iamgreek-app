@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="iamgreek" default="install-web-remote" basedir="..">
+	<description>
+		
+    </description>
+
+	<!-- Properties file -->
+	<property file="./install/config.properties" />
+
+	<!-- File list -->
+	<fileset id="library" dir="${basedir}/assets/www/">
+		<include name="index.html" />
+		<include name="js/**" />
+		<include name="style/**" />
+		<include name="img/**" /> 
+	</fileset>
+
+	<!-- ================================= 
+          target: install-remote
+         ================================= -->
+	<target name="install-web-remote" description="Remote installation.">
+        <sshexec trust="true" failonerror="true" host="${servername}"
+            username="${remote.username}" password="${remote.password}"
+            command="mkdir -pv ${remote.install.dir}" />
+        <sshexec trust="true" failonerror="true" host="${servername}"
+            username="${remote.username}" password="${remote.password}"
+            command="cd ${remote.install.dir}; rm -rfv *" />
+		<scp failonerror="true" verbose="true" trust="true" password="${remote.password}"
+			todir="${remote.username}@${servername}:${remote.install.dir}">
+			<fileset refid="library" />
+		</scp>
+	</target>
+
+	
+
+	<!-- ================================= 
+          target: info
+         ================================= -->
+	<target name="info" description="Default informative task">
+		<echo></echo>
+	</target>
+
+</project>
